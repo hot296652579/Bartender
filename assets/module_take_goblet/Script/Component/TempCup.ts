@@ -1,5 +1,5 @@
-import { _decorator, Component, Enum, Node } from 'cc';
-import { CupHeight, WaterColors } from '../TakeGobletGlobalInstance';
+import { _decorator, color, Color, Component, Enum, Node, sp } from 'cc';
+import { CupHeight, WaterColorHex, WaterColors } from '../TakeGobletGlobalInstance';
 import { Water } from './Water';
 import { EventDispatcher } from 'db://assets/core_tgx/easy_ui_framework/EventDispatcher';
 import { GameEvent } from '../Enum/GameEvent';
@@ -13,6 +13,12 @@ export class TempCup extends Component {
 
     @property(Node)
     waters: Node = null!;  //水节点
+
+    @property(sp.Skeleton)
+    colorB: sp.Skeleton = null!;  //水流骨骼
+
+    @property(sp.Skeleton)
+    cupSkeleton: sp.Skeleton = null!;  //杯骨骼
 
     @property(Node)
     adNode: Node = null!;
@@ -49,13 +55,23 @@ export class TempCup extends Component {
         if (this._isFull) return;
 
         const waterNode = this.waters.children[0];
-        if (waterNode) {
-            const water = waterNode.getComponent(Water)!;
-            water.color = color;
+        if (waterNode && waterNode.getComponent(sp.Skeleton)) {
             waterNode.active = true;
             this._currentColor = color;
+            let cupColor = new Color(WaterColorHex[color]);
+            let waterSpine = waterNode.getComponent(sp.Skeleton)!;
+            console.log(`暂存水的颜色:${WaterColorHex[color]}`)
+            this.colorB.color = cupColor;
+            waterSpine.color = cupColor;
+            waterSpine.setAnimation(0, 'pick_01', false);
+            this.colorB.setAnimation(0, 'pick_01', false);
+            this.cupSkeleton.setAnimation(0, 'pick_01', false);
             this._isFull = true;
         }
+    }
+
+    pour() {
+
     }
 
     reset() {

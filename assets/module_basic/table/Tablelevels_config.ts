@@ -71,5 +71,9 @@ export class Tablelevels_config {
     get change_thelimit(): number {
         return this.data.change_thelimit;
     }
+    /** 是否参与随机 */
+    get random(): number {
+        return this.data.random;
+    }
 }
     

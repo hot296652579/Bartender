@@ -1,0 +1,83 @@
+
+skeleton.png
+size: 586,287
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+1goblet
+  rotate: true
+  xy: 2, 2
+  size: 136, 275
+  orig: 136, 275
+  offset: 0, 0
+  index: -1
+XiGuan
+  rotate: true
+  xy: 2, 140
+  size: 145, 307
+  orig: 145, 307
+  offset: 0, 0
+  index: -1
+ZhuangShi1
+  rotate: false
+  xy: 391, 54
+  size: 95, 95
+  orig: 95, 95
+  offset: 0, 0
+  index: -1
+ZhuangShi3
+  rotate: false
+  xy: 498, 9
+  size: 49, 66
+  orig: 49, 66
+  offset: 0, 0
+  index: -1
+botton
+  rotate: true
+  xy: 413, 179
+  size: 106, 55
+  orig: 106, 56
+  offset: 0, 1
+  index: -1
+fallwater
+  rotate: false
+  xy: 549, 9
+  size: 35, 276
+  orig: 35, 276
+  offset: 0, 0
+  index: -1
+middle
+  rotate: true
+  xy: 470, 182
+  size: 103, 47
+  orig: 103, 47
+  offset: 0, 0
+  index: -1
+spray_B
+  rotate: true
+  xy: 279, 10
+  size: 128, 110
+  orig: 140, 124
+  offset: 12, 14
+  index: -1
+spray_f
+  rotate: true
+  xy: 311, 151
+  size: 134, 100
+  orig: 140, 124
+  offset: 0, 0
+  index: -1
+top
+  rotate: true
+  xy: 488, 77
+  size: 103, 41
+  orig: 103, 41
+  offset: 0, 0
+  index: -1
+up
+  rotate: false
+  xy: 391, 3
+  size: 105, 49
+  orig: 105, 49
+  offset: 0, 0
+  index: -1

@@ -38,6 +38,9 @@ export class UI_BattleResult_Impl extends UI_BattleResult {
         layout.loseNode.active = !this.win;
 
         this.rotationLight();
+
+        const { level } = LevelManager.instance.levelModel;
+        GtagMgr.inst.doGameDot(GtagType.level_end, { level }); //上报关卡结束
     }
 
     private rotationLight(): void {

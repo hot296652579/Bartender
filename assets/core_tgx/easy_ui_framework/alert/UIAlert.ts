@@ -4,6 +4,7 @@ import { Layout_UIAlert } from "./Layout_UIAlert";
 
 export class UIAlertOptions {
     private _title?: string;
+    private _type?: string;
     private _content?: string;
     private _showCancel?: boolean;
     private _cbClick?: Function;
@@ -11,6 +12,11 @@ export class UIAlertOptions {
 
     setTitle(title: string): UIAlertOptions {
         this._title = title;
+        return this;
+    }
+
+    setType(type: string): UIAlertOptions {
+        this._type = type;
         return this;
     }
 
@@ -24,8 +30,9 @@ export class UIAlertOptions {
 export class UIAlert extends UIController {
     private _options: UIAlertOptions;
 
-    public static show(content: string, showCancel?: boolean): UIAlertOptions {
+    public static show(content: string, type: string, showCancel?: boolean): UIAlertOptions {
         let opts = new UIAlertOptions() as any;
+        opts._type = type;
         opts._content = content;
         opts._showCancel = showCancel;
         UIMgr.inst.showUI(UIAlert, (alert: UIAlert) => {
@@ -36,7 +43,7 @@ export class UIAlert extends UIController {
 
     private init(opts: UIAlertOptions) {
         this._options = opts;
-        let options = this._options as any as { _title: string, _content: string, _showCancel: boolean };
+        let options = this._options as any as { _title: string, _type: string, _content: string, _showCancel: boolean };
         let layout = this.layout as Layout_UIAlert;
         if (options.hasOwnProperty('title')) {
             layout.title.string = options._title || '';
@@ -48,6 +55,8 @@ export class UIAlert extends UIController {
             let pos = layout.btnOK.node.position;
             layout.btnOK.node.setPosition(0, pos.y, pos.z);
         }
+
+        this.showAlerType(options._type);
     }
 
     protected onCreated(): void {
@@ -67,5 +76,25 @@ export class UIAlert extends UIController {
                 options._cbClick.call(options._cbClickThisArg, false);
             }
         });
+    }
+
+    private showAlerType(type: String): void {
+        let layout = this.layout as Layout_UIAlert;
+        layout.fillUp.active = false;
+        layout.remove.active = false;
+        layout.refresh.active = false;
+
+        switch (type) {
+            case "FillUp":
+                layout.fillUp.active = true;
+                break;
+            case "Remove":
+                layout.remove.active = true;
+                break;
+            case "Refresh":
+                layout.refresh.active = true;
+                break;
+        }
+
     }
 }

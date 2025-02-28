@@ -47,6 +47,7 @@ export class CocktailCup extends Component {
 
     // 添加水层
     async addLayer(color: WaterColors) {
+        this.currentLayers++;
         const nextIndex = this.waters.children.filter(n => n.active).length;
         const waterNode = this.waters.children[nextIndex];
         if (waterNode) {

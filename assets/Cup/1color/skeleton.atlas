@@ -1,0 +1,55 @@
+
+skeleton.png
+size: 282,254
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+ChuShuiBei
+  rotate: true
+  xy: 138, 107
+  size: 108, 130
+  orig: 108, 130
+  offset: 0, 0
+  index: -1
+fallwater
+  rotate: true
+  xy: 2, 217
+  size: 35, 276
+  orig: 35, 276
+  offset: 0, 0
+  index: -1
+middle
+  rotate: false
+  xy: 132, 7
+  size: 103, 47
+  orig: 103, 47
+  offset: 0, 0
+  index: -1
+spray_B
+  rotate: false
+  xy: 2, 3
+  size: 128, 110
+  orig: 140, 124
+  offset: 12, 14
+  index: -1
+spray_f
+  rotate: false
+  xy: 2, 115
+  size: 134, 100
+  orig: 140, 124
+  offset: 0, 0
+  index: -1
+top
+  rotate: true
+  xy: 239, 2
+  size: 103, 41
+  orig: 103, 41
+  offset: 0, 0
+  index: -1
+up
+  rotate: false
+  xy: 132, 56
+  size: 105, 49
+  orig: 105, 49
+  offset: 0, 0
+  index: -1

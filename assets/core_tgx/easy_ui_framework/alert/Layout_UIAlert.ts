@@ -5,15 +5,24 @@ const { ccclass, property } = _decorator;
 export class Layout_UIAlert extends Component {
 
     @property(Label)
-    title:Label;
+    title: Label;
 
     @property(Label)
-    content:Label;
+    content: Label;
 
     @property(Button)
-    btnOK:Button;
+    btnOK: Button;
 
     @property(Button)
-    btnCancel:Button;
+    btnCancel: Button;
+
+    @property(Node)
+    fillUp: Node;
+
+    @property(Node)
+    remove: Node;
+
+    @property(Node)
+    refresh: Node;
 }
 

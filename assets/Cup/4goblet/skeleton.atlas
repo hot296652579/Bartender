@@ -1,0 +1,90 @@
+
+skeleton.png
+size: 190,894
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+XiGuan
+  rotate: false
+  xy: 2, 585
+  size: 145, 307
+  orig: 145, 307
+  offset: 0, 0
+  index: -1
+ZhuangShi1
+  rotate: false
+  xy: 2, 16
+  size: 95, 95
+  orig: 95, 95
+  offset: 0, 0
+  index: -1
+ZhuangShi3
+  rotate: true
+  xy: 99, 2
+  size: 49, 66
+  orig: 49, 66
+  offset: 0, 0
+  index: -1
+botton
+  rotate: true
+  xy: 132, 53
+  size: 106, 55
+  orig: 106, 56
+  offset: 0, 1
+  index: -1
+fallwater
+  rotate: false
+  xy: 149, 616
+  size: 35, 276
+  orig: 35, 276
+  offset: 0, 0
+  index: -1
+goblet
+  rotate: false
+  xy: 2, 327
+  size: 136, 256
+  orig: 136, 275
+  offset: 0, 0
+  index: -1
+lower
+  rotate: true
+  xy: 140, 375
+  size: 103, 41
+  orig: 103, 41
+  offset: 0, 0
+  index: -1
+middle
+  rotate: true
+  xy: 140, 480
+  size: 103, 47
+  orig: 103, 47
+  offset: 0, 0
+  index: -1
+spray_B
+  rotate: false
+  xy: 2, 113
+  size: 128, 110
+  orig: 140, 124
+  offset: 12, 14
+  index: -1
+spray_f
+  rotate: false
+  xy: 2, 225
+  size: 134, 100
+  orig: 140, 124
+  offset: 0, 0
+  index: -1
+top
+  rotate: true
+  xy: 140, 270
+  size: 103, 41
+  orig: 103, 41
+  offset: 0, 0
+  index: -1
+up
+  rotate: true
+  xy: 138, 161
+  size: 107, 50
+  orig: 107, 50
+  offset: 0, 0
+  index: -1

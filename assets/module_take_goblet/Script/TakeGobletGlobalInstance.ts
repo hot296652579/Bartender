@@ -123,6 +123,30 @@ export class TakeGobletGlobalInstance {
         }
         return random <= query_probability;
     }
+
+    //初始化 冰冻水刷新概率
+    refreshFreezeWaterInit(): boolean {
+        const { ice_thelimit } = LevelManager.instance.levelModel.levelConfig;
+        const random = Math.random() * 100;
+        return random <= ice_thelimit;
+    }
+
+    //生成单个冰冻水刷新概率
+    refreshFreezeWater(freezeCount: number): boolean {
+        const { ice_ceiling, ice_probability } = LevelManager.instance.levelModel.levelConfig;
+        if (freezeCount >= ice_ceiling) {
+            return false;
+        }
+
+        const random = Math.random() * 100;
+        return random <= ice_probability;
+    }
+
+    //是否超过冰冻水上限
+    isOverFreezeWaterCeiling(currrentFreezeCount: number): boolean {
+        const { ice_ceiling } = LevelManager.instance.levelModel.levelConfig;
+        return currrentFreezeCount >= ice_ceiling;
+    }
 }
 
 /**道具类型
@@ -146,6 +170,7 @@ export enum WaterColors {
     Cyan = 7, // 青
     Blue = 8, // 蓝
     DarkBlue = 9, // 深蓝
+    Black = 10, // 黑
 }
 
 // 定义对应的十六进制颜色值
@@ -159,6 +184,7 @@ export const WaterColorHex: Record<WaterColors, string> = {
     [WaterColors.Purple]: "#D62F9C",
     [WaterColors.Magenta]: "#EE60FE",
     [WaterColors.DarkBlue]: "#3052A1",
+    [WaterColors.Black]: "#131313",
 };
 
 export const WaterColorLog: Record<WaterColors, string> = {
@@ -170,7 +196,8 @@ export const WaterColorLog: Record<WaterColors, string> = {
     [WaterColors.Pink]: "粉色",
     [WaterColors.Purple]: "紫色",
     [WaterColors.Magenta]: '紫红色',
-    [WaterColors.DarkBlue]: '深蓝色'
+    [WaterColors.DarkBlue]: '深蓝色',
+    [WaterColors.Black]: '黑色'
 };
 
 /**杯子高度*/

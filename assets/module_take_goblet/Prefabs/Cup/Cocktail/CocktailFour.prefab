@@ -530,7 +530,7 @@
     "value": {
       "__type__": "cc.Vec3",
       "x": 0,
-      "y": -25,
+      "y": -75,
       "z": 0
     }
   },
@@ -599,7 +599,7 @@
     "propertyPath": [
       "_active"
     ],
-    "value": true
+    "value": false
   },
   {
     "__type__": "cc.Node",
@@ -1051,11 +1051,7 @@
     },
     "fileId": "c46/YsCPVOJYA4mWEpNYRx",
     "instance": null,
-    "targetOverrides": [
-      {
-        "__id__": 69
-      }
-    ],
+    "targetOverrides": [],
     "nestedPrefabInstanceRoots": [
       {
         "__id__": 46
@@ -1069,36 +1065,6 @@
       {
         "__id__": 11
       }
-    ]
-  },
-  {
-    "__type__": "cc.TargetOverrideInfo",
-    "source": {
-      "__id__": 11
-    },
-    "sourceInfo": {
-      "__id__": 70
-    },
-    "propertyPath": [
-      "sprite"
-    ],
-    "target": {
-      "__id__": 11
-    },
-    "targetInfo": {
-      "__id__": 71
-    }
-  },
-  {
-    "__type__": "cc.TargetInfo",
-    "localID": [
-      "35arNdD8JHg5R+J5tJu3LH"
-    ]
-  },
-  {
-    "__type__": "cc.TargetInfo",
-    "localID": [
-      "d1TNjQ6tpHdpBByUekiuDV"
     ]
   }
 ]

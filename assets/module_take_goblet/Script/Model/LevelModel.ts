@@ -61,7 +61,7 @@ export class LevelModel {
     public initLevelColors() {
         const count = this.levelConfig.color; //获取关卡颜色数
         this.levelColors = [];
-        const allColors = Object.values(WaterColors).filter(v => !isNaN(Number(v))) as WaterColors[];
+        const allColors = Object.values(WaterColors).filter(v => !isNaN(Number(v)) && v != WaterColors.Black) as WaterColors[];
         // Fisher-Yates 洗牌算法
         for (let i = allColors.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));

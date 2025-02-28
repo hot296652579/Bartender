@@ -3,7 +3,7 @@ import { CupHeight, TakeGobletGlobalInstance, WaterColorLog, WaterColors } from 
 import { OutArea } from './Component/OutArea';
 import { WaitArea } from './Component/WaitArea';
 import { CocktailCup } from './Component/CocktailCup';
-import { OriginCup } from './Component/OriginCup';
+import { OriginCup, OriginCupState } from './Component/OriginCup';
 import { Water } from './Component/Water';
 import { EventDispatcher } from '../../core_tgx/easy_ui_framework/EventDispatcher';
 import { GameEvent } from './Enum/GameEvent';
@@ -12,7 +12,11 @@ import { TempCups } from './Component/TempCups';
 import { tgxUIMgr, tgxUITips } from '../../core_tgx/tgx';
 import { LevelManager } from './Manager/LevelMgr';
 import { UI_BattleResult } from '../../scripts/UIDef';
+import { GameUtil } from './GameUtil';
 import { OriginArea } from './Component/OriginArea';
+import { GtagMgr, GtagType } from '../../core_tgx/base/GtagMgr';
+import { GlobalConfig } from '../../start/Config/GlobalConfig';
+import { AdvertMgr } from '../../core_tgx/base/ad/AdvertMgr';
 const { ccclass, property } = _decorator;
 
 @ccclass('LevelAction')
@@ -30,7 +34,7 @@ export class LevelAction extends Component {
     @property(Node)
     originArea: Node = null!;  //原浆区
 
-    private originCupPositions = new Map<string, Vec3>(); // 改用唯一ID记录
+    originCupPositions = new Map<string, Vec3>(); // 改用唯一ID记录
     private isProcessing = false; // 添加状态锁
     static instance: LevelAction; // 添加静态实例
 
@@ -41,6 +45,18 @@ export class LevelAction extends Component {
     start() {
         this.generateInitialCups();
         this.registerListener();
+        this.reportInformation();
+    }
+
+    //上报信息
+    reportInformation() {
+        const { level } = LevelManager.instance.levelModel;
+        console.log(`上报信息 level:${level}`);
+        GtagMgr.inst.doGameDot(GtagType.level_start, { level });
+
+        if (!GlobalConfig.isDebug) {
+            AdvertMgr.instance.showInterstitial();
+        }
     }
 
     onDestroy() {
@@ -122,7 +138,6 @@ export class LevelAction extends Component {
     }
 
     private async generateOriginCups() {
-
         if (this.isProcessing) {
             tgxUITips.show('我知道你很急，但你先别急!');
             return;
@@ -150,6 +165,13 @@ export class LevelAction extends Component {
                     waterNode.active = true;
                 }
             }
+
+            //冰冻水
+            const freezeInit = TakeGobletGlobalInstance.instance.refreshFreezeWaterInit();
+            const freezeCount = this.originArea.getComponent(OriginArea)!.getFrozenCupCount();
+            const freezeOver = TakeGobletGlobalInstance.instance.isOverFreezeWaterCeiling(freezeCount);
+            const freeze = freezeInit && !freezeOver;
+            originCup.getComponent(OriginCup)!.freezeActive = freeze;
 
             // 在生成初始原浆杯时记录位置
             const id = originCupNode.uuid; // 使用节点唯一ID
@@ -194,15 +216,13 @@ export class LevelAction extends Component {
             }
 
             let hasUnprocessed = false; // 标记是否有未处理的水层
+            originCup.setMark(false);
 
             for (const waterNode of watersNode) {
                 const color = waterNode.getComponent(Water)!.color;
+                console.log(`当前处理的颜色:${WaterColorLog[color]}}`);
                 let targetNode: Node | null = this.findTargetCupInOutArea(color)?.node || null;
                 let targetIsTemp = false;
-
-                if (waterNode.getComponent(Water).markActive) {
-                    waterNode.getComponent(Water)!.setMark(false);
-                }
 
                 // 调酒区未找到，查找暂存区
                 if (!targetNode) {
@@ -232,6 +252,8 @@ export class LevelAction extends Component {
                     targetIsTemp
                 );
 
+                await this.hideCurrentWaterLayer(originCup);
+
                 // 更新目标杯
                 if (targetIsTemp) {
                     const tempCupComp = targetNode.getComponent(TempCup)!;
@@ -240,8 +262,6 @@ export class LevelAction extends Component {
                     const cocktailCup = targetNode.getComponent(CocktailCup)!;
                     await cocktailCup.addLayer(color); // 等待添加水层流程完成
                 }
-
-                this.hideCurrentWaterLayer(originCup);
             }
 
             // 处理完所有颜色后检查剩余水层
@@ -375,10 +395,15 @@ export class LevelAction extends Component {
 
         // 调整Y轴偏移量
         if (isTempCup) {
-            localPos.y += 80; // 暂存杯偏移
+            localPos.x -= 55; // 暂存杯偏移
+            localPos.y += 115;
         } else {
-            localPos.y += 150; // 调酒杯偏移
+            localPos.x -= 50; // 调酒杯偏移
+            localPos.y += 100;
         }
+
+        //播放动画
+        origin.getComponent(OriginCup)?.playAnimation(OriginCupState.Up);
 
         // 移动动画到目标位置
         await new Promise<void>(resolve => {
@@ -399,12 +424,14 @@ export class LevelAction extends Component {
         }
     }
 
-    //隐藏原浆杯当前水层
-    private hideCurrentWaterLayer(originCup: OriginCup) {
+    //隐藏原浆杯当前水层 等待倒水动画
+    private async hideCurrentWaterLayer(originCup: OriginCup) {
         const activeWaters = originCup.waters.children.filter(n => n.active);
+        const topIndex = originCup.waters.children.length - activeWaters.length;
         if (activeWaters.length >= 0) {
-            const topIndex = activeWaters.length - 1;
-            activeWaters[topIndex].active = false;
+            originCup.getComponent(OriginCup)?.playAnimation(OriginCupState.PourWater, topIndex + 1);
+            await GameUtil.delay(0.5);
+            activeWaters[activeWaters.length - 1].active = false;
         }
     }
 
@@ -418,24 +445,8 @@ export class LevelAction extends Component {
         const height = TakeGobletGlobalInstance.instance.generateOriginCupHeight();
         const prefab = await TakeGobletGlobalInstance.instance.loadAsyncOriginCup(height);
         const newCup = instantiate(prefab);
-
-        // 设置初始位置（屏幕左侧）
-        const uiTransform = this.node.getComponent(UITransform)!;
-        newCup.setPosition(-uiTransform.width / 2, 0, 0);
-        newCup.getComponent(OriginCup)!.cupHeight = height;
         this.originArea.addChild(newCup);
-        this.setupOriginCupColors(newCup, colors);
-
-        // 记录新杯子的初始位置
-        this.originCupPositions.set(newCup.uuid, targetPos);
-
-        // 移动动画到原位置
-        tween(newCup)
-            .to(0.5, { position: targetPos })
-            .start();
-
-        const markCount = this.originArea.getComponent(OriginArea)?.getTotalMarkCount();
-        LevelManager.instance.levelModel.createQuestionCount = markCount;
+        await newCup.getComponent(OriginCup)?.spawnNewOriginCup(height, targetPos, colors);
     }
 
     // 获取可用颜色
@@ -448,26 +459,6 @@ export class LevelAction extends Component {
             const comp = cup.getComponent(CocktailCup);
             return comp ? comp.cupColor : WaterColors.Blue;
         });
-    }
-
-    // 设置原浆杯颜色
-    private setupOriginCupColors(cupNode: Node, colors: WaterColors[]) {
-        const originCup = cupNode.getComponent(OriginCup)!;
-        const waters = originCup.waters.children;
-        // console.log(`新创建原浆杯，高度: ${originCup.cupHeight}`);
-        const markCount = this.originArea.getComponent(OriginArea)?.getTotalMarkCount();
-        const waterCount = originCup.cupHeight;
-        for (let i = 0; i < waterCount; i++) {
-            const waterNode = waters[i];
-            if (!waterNode) continue;
-
-            const water = waterNode.getComponent(Water)!;
-            const mark = TakeGobletGlobalInstance.instance.refreshQuestionWater(markCount);
-            water.color = colors[Math.floor(Math.random() * colors.length)];
-            waterNode.active = true;
-            // console.log('mark: ', mark);
-            water.setMark(mark);
-        }
     }
 
     private handleCupDestroyed(destroyedCup: Node) {
